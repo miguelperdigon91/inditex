@@ -1,0 +1,33 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/farmatodo-test
+  compression:
+    enabled: true
+    min-response-size: 2048
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+
+management:
+  db:
+    enabled: false
+  diskspace:
+    enabled: false
+
+spring:
+  application:
+    name: farmatodo-test
+
+  messages:
+    basename: messages
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test
+
+app:
+  api:
+    tv-show:
+      name: rick-and-morti
+      url: http://localhost
+      paths:
+        episode: api/episode/{id}

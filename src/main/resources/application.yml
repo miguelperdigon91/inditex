@@ -1,0 +1,32 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/farmatodo-test
+  compression:
+    enabled: true
+    min-response-size: 2048
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+
+springdoc:
+  swagger-ui:
+    path: /internal-ms/swagger-ui.html
+    enabled: true
+
+spring:
+  application:
+    name: farmatodo-test
+
+  messages:
+    basename: messages
+
+  data:
+    mongodb:
+      uri: ${MONGO_DB_URL_CONNECTION}
+
+app:
+  api:
+    tv-show:
+      name: rick-and-morti
+      url: https://rickandmortyapi.com
+      paths:
+        episode: api/episode/{id}
