@@ -32,4 +32,7 @@ Technical test applied by Miguel Perdigón
  
 * `MONGO_DB_URL_CONNECTION`: mongodb connection string
 * `MONGO_DB_NAME`: mongodb database name
+
+# Swagger
+/api/farmatodo-test/internal-ms/swagger-ui/index.html#
  
