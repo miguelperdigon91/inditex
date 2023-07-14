@@ -34,5 +34,6 @@ Technical test applied by Miguel Perdigón
 * `MONGO_DB_NAME`: mongodb database name
 
 # Swagger
-/api/farmatodo-test/internal-ms/swagger-ui/index.html#
+* to consume the API put this in the browser
+  http://localhost:8080//api/farmatodo-test/internal-ms/swagger-ui/index.html#
  
