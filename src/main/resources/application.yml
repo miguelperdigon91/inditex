@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /api/farmatodo-test
+    context-path: /api/inditex-test
   compression:
     enabled: true
     min-response-size: 2048
@@ -9,24 +9,12 @@ server:
 
 springdoc:
   swagger-ui:
-    path: /internal-ms/swagger-ui.html
+    path: /swagger-ui.html
     enabled: true
 
 spring:
   application:
-    name: farmatodo-test
+    name: inditex-test
 
   messages:
     basename: messages
-
-  data:
-    mongodb:
-      uri: ${MONGO_DB_URL_CONNECTION}
-
-app:
-  api:
-    tv-show:
-      name: rick-and-morti
-      url: https://rickandmortyapi.com
-      paths:
-        episode: api/episode/{id}
