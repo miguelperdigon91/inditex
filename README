@@ -1,0 +1,20 @@
+Me decidí por esta solución ya que luego de leer varias veces la prueba, me dio a entender que pedían una prueba de integración
+que reaccionara de forma esperada ante varios casos de soporte. Luego tomé mis precausiones para que el servicio no fallara con
+un error 500. Tuve que personalizar un converter para que aceptara el formato solicitado yyyy-MM-dd-HH.mm.ss y supiese convertirlo
+en un LocalDateTime.
+
+Procedo a explicar la estructura del proyecto
+
+- config: están las configuraciones de toda índole que se necesiten para el funcionamiento del servicio
+- controller: se definen los controllers que a su vez definen las firmas de lso endpoints que expondrá el servicio
+- dto: en este directorio están todos los objetos que se usan para transportar datos donde se necesiten (Data Transfer Object)
+- exceptions: están todas las excepciones personalizadas, útiles por una parte para responder un mensaje para el error específico
+- model: están definidas todas als entidades de la base de datos
+- repository: están definidos todos los repositorios para consultar la base de datos
+- service: están definidos los servicios que se encargan de ejecutar la lógica de negocio
+
+Mejoras al servicio:
+
+Es posible que con el paso del tiempo se llene la base de datos de información basura con fechas vencidas, que
+hará más lenta la consulta del precio a aplicar de forma innecesaria. Podría agregarse una tarea programada que se ejecute
+una ves cada X tiempo, quizás una vez mensual, que elimine de la bases de datos registros que ya no estén vigentes.

@@ -2,51 +2,40 @@ package com.inditex.test.service;
 
 import com.inditex.test.dto.PriceRequest;
 import com.inditex.test.exceptions.PriceNotFoundException;
-import com.inditex.test.repository.PriceRepository;
-import com.inditex.test.dto.PriceResponse;
 import com.inditex.test.model.Price;
+import com.inditex.test.repository.PriceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OfferSearcher {
+    private static final int FIRST_OFFER = 0;
     private final PriceRepository priceRepository;
 
-    private static final int FIRST_OFFER = 0;
-
-    public PriceResponse search(PriceRequest request) {
+    public Price search(PriceRequest request) {
         log.info("Arrives request [{}] to find final price to apply", request);
 
-        Pageable pageable = PageRequest.of(0, 1);
+        List<Price> offers = priceRepository.findPrices(
+                request.getApplicationDate(),
+                request.getProductId(),
+                request.getBrandName());
 
-        Page<Price> result = priceRepository.findPrices(
-                        request.getApplicationDate(),
-                        request.getProductId(),
-                        request.getBrandName(),
-                        pageable);
-
-        if (result.getContent().isEmpty()) {
+        if (offers.isEmpty()) {
             log.error("Required Offer does not exist [{}]", request);
 
             throw new PriceNotFoundException();
         }
 
-        Price offer = result.getContent().get(FIRST_OFFER);
+        offers.sort(Comparator.comparingInt(Price::getPriority).reversed());
+        Price offer = offers.get(FIRST_OFFER);
 
         log.info("Found offer that has final price [{} {}]", offer.getPrice(), offer.getCurrency());
-        return PriceResponse.builder()
-                .startDate(offer.getStartDate())
-                .endDate(offer.getEndDate())
-                .finalPrice(offer.getPrice())
-                .priceList(offer.getPriceList())
-                .brandName(offer.getBrand().getName())
-                .productId(offer.getProductId())
-                .build();
+        return offer;
     }
 }

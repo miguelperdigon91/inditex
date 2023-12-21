@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
@@ -92,8 +93,6 @@ public class PriceControllerTest {
         PriceResponse expected = buildPriceResponse(converter.convert("2020-06-14-00.00.00"),
                 converter.convert("2020-12-31-23.59.59"), new BigDecimal("35.50"), 35455L, 1);
 
-        List<Price> all = priceRepository.findAll();
-
         ResponseEntity<PriceResponse> response = restTemplate.exchange(
                 buildSearchPriceToApplyUrl("35455", "XYZ", "2020-06-14-10.00.00"),
                 GET,
@@ -108,8 +107,6 @@ public class PriceControllerTest {
     void test2() throws Exception {
         PriceResponse expected = buildPriceResponse(converter.convert("2020-06-14-15.00.00"),
                 converter.convert("2020-06-14-18.30.00"), new BigDecimal("25.45"), 35455L, 2);
-
-        List<Price> all = priceRepository.findAll();
 
         ResponseEntity<PriceResponse> response = restTemplate.exchange(
                 buildSearchPriceToApplyUrl("35455", "XYZ", "2020-06-14-16.00.00"),
@@ -126,8 +123,6 @@ public class PriceControllerTest {
         PriceResponse expected = buildPriceResponse(converter.convert("2020-06-14-00.00.00"),
                 converter.convert("2020-12-31-23.59.59"), new BigDecimal("35.50"), 35455L, 1);
 
-        List<Price> all = priceRepository.findAll();
-
         ResponseEntity<PriceResponse> response = restTemplate.exchange(
                 buildSearchPriceToApplyUrl("35455", "XYZ", "2020-06-14-21.00.00"),
                 GET,
@@ -142,8 +137,6 @@ public class PriceControllerTest {
     void test4() throws Exception {
         PriceResponse expected = buildPriceResponse(converter.convert("2020-06-15-00.00.00"),
                 converter.convert("2020-06-15-11.00.00"), new BigDecimal("30.50"), 35455L, 3);
-
-        List<Price> all = priceRepository.findAll();
 
         ResponseEntity<PriceResponse> response = restTemplate.exchange(
                 buildSearchPriceToApplyUrl("35455", "XYZ", "2020-06-15-10.00.00"),
@@ -160,8 +153,6 @@ public class PriceControllerTest {
         PriceResponse expected = buildPriceResponse(converter.convert("2020-06-15-16.00.00"),
                 converter.convert("2020-12-31-23.59.59"), new BigDecimal("38.95"), 35455L, 4);
 
-        List<Price> all = priceRepository.findAll();
-
         ResponseEntity<PriceResponse> response = restTemplate.exchange(
                 buildSearchPriceToApplyUrl("35455", "XYZ", "2020-06-16-21.00.00"),
                 GET,
@@ -171,6 +162,17 @@ public class PriceControllerTest {
         assertEquals(expected, response.getBody());
     }
 
+    @Test
+    @DisplayName("*Test 6: request has a wrong application date")
+    void test_WhenApplicationDateWrong_ThenBadRequest() throws Exception {
+        ResponseEntity<PriceResponse> response = restTemplate.exchange(
+                buildSearchPriceToApplyUrl("35455", "XYZ", "2020-06-16-21.00.0"),
+                GET,
+                null,
+                PriceResponse.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
     String buildSearchPriceToApplyUrl(String productId, String brandName, String applicationDate) throws Exception {
         return new URL("http://localhost:" + port +
                 "/api/inditex-test/price/product-id/" + productId + "/brand/" + brandName) + "?application-date=" + applicationDate;

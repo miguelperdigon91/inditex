@@ -2,6 +2,7 @@ package com.inditex.test.controller;
 
 import com.inditex.test.dto.PriceRequest;
 import com.inditex.test.dto.PriceResponse;
+import com.inditex.test.model.Price;
 import com.inditex.test.service.OfferSearcher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,15 @@ public class PriceController {
                 .applicationDate(applicationDate)
                 .build();
 
-        return ok(offerSearcher.search(request));
+        Price offer = offerSearcher.search(request);
+
+        return ok(PriceResponse.builder()
+                .startDate(offer.getStartDate())
+                .endDate(offer.getEndDate())
+                .finalPrice(offer.getPrice())
+                .priceList(offer.getPriceList())
+                .brandName(offer.getBrand().getName())
+                .productId(offer.getProductId())
+                .build());
     }
 }
